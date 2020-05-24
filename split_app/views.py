@@ -96,7 +96,7 @@ class DocumentCreate(generics.ListCreateAPIView):
                 status_code=status.HTTP_400_BAD_REQUEST,
             )
 
-        zipLink = "http://localhost:8000/api/document/download/" + str(document.id)
+        zipLink = "/api/document/download/" + str(document.id)
         return formatResponse(zipLink, status_code=status.HTTP_200_OK)
 
     def zipFiles(self):

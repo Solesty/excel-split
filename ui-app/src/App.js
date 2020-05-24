@@ -51,7 +51,7 @@ export class App extends Component {
     formData.append("count_headers", this.state.count_headers);
     formData.append("sheet_name", this.state.sheet_name);
 
-    const request = Axios.post("http://localhost:8000/api/document/", formData);
+    const request = Axios.post("/api/document/", formData);
 
     request.then((e) => {
       this.setState({
