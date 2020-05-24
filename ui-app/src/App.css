@@ -1,0 +1,86 @@
+body {
+  font-family: "Balsamiq Sans", cursive;
+}
+
+.container {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  margin-top: 30px;
+  justify-content: center;
+  justify-self: center;
+  width: 100%;
+}
+
+.form {
+  width: 300px;
+}
+
+.finger {
+  cursor: pointer;
+}
+
+.form-checkbox {
+  margin-bottom: 20px;
+  padding-left: 10px;
+}
+
+.form-file {
+  margin-bottom: 20px;
+  padding-left: 20px;
+}
+
+.submit-button {
+  width: 100%;
+  margin-left: 20px;
+  height: 50px;
+  border: 1px solid white;
+  cursor: pointer;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.747);
+}
+
+.form-input input {
+  font-size: 1em;
+  margin: 10px;
+  width: 300px;
+  font-family: "Balsamiq Sans", cursive;
+  height: 40px;
+  padding-left: 10px;
+  border-radius: 5px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.747);
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.form-input input:focus,
+.form-input input:hover,
+.form-input input:focus-within,
+.form-input input:active {
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.747);
+}
+
+.app-info {
+  background-color: rgba(0, 0, 0, 0.747);
+  color: white;
+  padding: 20px;
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.information {
+  background-color: rgba(0, 0, 0, 0.747);
+  color: white;
+  padding: 20px;
+  margin: 0 auto;
+  width: 100%;
+  margin-bottom: 20PX;
+  text-align: center;
+  height: 20px;
+  overflow: auto;
+}
