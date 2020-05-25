@@ -55,8 +55,8 @@ export class App extends Component {
 
     const liveServer = "/api/document/";
     const localServer = "http://localhost:8000/api/document/"
-    const serverr = liveServer;
-    const request = Axios.post(localServer, formData);
+    const server = liveServer;
+    const request = Axios.post(server, formData);
 
     request.then((e) => {
       window.document.getElementById('file').value = null
