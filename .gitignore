@@ -1,6 +1,5 @@
 node_modules
 venv
-# build
 documents
 
 
@@ -13,9 +12,6 @@ documents
 
 # testing
 /coverage
-
-# production
-/build
 
 # misc
 .DS_Store
