@@ -27,20 +27,22 @@ export class App extends Component {
   }
 
   sendRequest = () => {
-    console.log(this.state);
+
     const file = this.state.docfile
     console.log(this.canUpload());
     if (!this.canUpload()) {
       this.setState({
-        error: true
+        error: true,
+        message: "Please provide the right parameters"
       });
       return;
     }
 
     this.setState({
-      error: false
+      error: false,
+      information: "Splitting, please wait...",
+      link: "",
     });
-
 
 
     const formData = new FormData();
@@ -51,68 +53,38 @@ export class App extends Component {
     formData.append("count_headers", this.state.count_headers);
     formData.append("sheet_name", this.state.sheet_name);
 
-    const request = Axios.post("/api/document/", formData);
+    const liveServer = "/api/document/";
+    const localServer = "http://localhost:8000/api/document/"
+    const serverr = liveServer;
+    const request = Axios.post(localServer, formData);
 
     request.then((e) => {
+      window.document.getElementById('file').value = null
+      // this.fileInputRef.current.value = null;
+      console.log(e);
       this.setState({
-        information: "Click the link below to download",
+        information: "Click the link below to download " + this.state.title,
         link: e.data['data'],
-        error: false
-      });
-    }).
+        error: false,
+
+        oldTitle: this.state.title,
+        title: "",
+        max_lines: 0,
+        copy_headers: true,
+        sheet_name: "",
+        count_headers: true,
+        docfile: null,
+      }, () => console.log(this.state));
+    });
+    request.
       catch((e) => {
+        console.log(e)
         this.setState({
-          error: true
+          error: true,
+          message: e.response.data['data'],
+          information: ""
         });
       });
-
-    // req.open("POST", "");
-    // req.send(formData)
-
-    // new Promise((resolve, reject) => {
-    //   const req = new XMLHttpRequest();
-
-    //   req.upload.addEventListener('progress', event => {
-    //     if (event.lengthComputable) {
-    //       const copy = { ...this.state.uploadProgress };
-    //       copy[file.name] = { state: 'pending', percentage: 100 };
-    //       this.setState({ uploadProgress: copy })
-    //       console.log(req)
-    //       resolve(req.response)
-    //     }
-    //   });
-
-    //   req.upload.addEventListener('load', event => {
-    //     const copy = { ...this.state.uploadProgress };
-    //     copy[file.name] = { state: 'load', percentage: 100 };
-    //     this.setState({ uploadProgress: copy })
-    //     console.log(req)
-    //     resolve(req.response)
-    //   });
-
-    //   req.upload.addEventListener('error', event => {
-    //     const copy = { ...this.state.uploadProgress };
-    //     copy[file.name] = { state: 'error', percentage: 0 };
-    //     this.setState({ uploadProgress: copy })
-    //     reject(req.response)
-    //   });
-
-
-    //   const formData = new FormData();
-    //   formData.append("docfile", file, file.name);
-    //   formData.append("title", this.state.title);
-    //   formData.append("max_lines", this.state.max_lines);
-    //   formData.append("copy_headers", this.state.copy_headers);
-    //   formData.append("count_headers", this.state.count_headers);
-    //   formData.append("sheet_name", this.state.sheet_name);
-
-    //   req.open("POST", "http://localhost:8000/api/document/");
-    //   req.send(formData)
-
-    // }).then(function (result) {
-    //   console.log(result)
-    // });
-
   }
 
 
@@ -136,6 +108,7 @@ export class App extends Component {
   openFileDialog = (event) => { }
 
   render() {
+    console.log(this.state);
     return (
       <div className="container" >
         <div className="form" >
@@ -151,21 +124,29 @@ export class App extends Component {
           {
             this.state.link.length == 0 ? null :
               <div className="information" >
-                <a href={this.state.link}>Download File </a>
+                <a className="link" href={this.state.link}>Download {this.state.oldTitle} File </a>
+              </div>
+          }
+          {
+            this.state.error !== true ? null :
+              <div className="information error" >
+                {this.state.message}
               </div>
           }
           <div className="form-input" >
-            <input className="text-input" placeholder="Title" type="text" onChange={(event) => {
+            <input value={this.state.title} className="text-input" placeholder="Title" type="text" onChange={(event) => {
               this.setState({
-                title: event.target.value
+                title: event.target.value,
+                error: false
               });
             }} />
           </div>
 
           <div className="form-input" >
-            <input className="text-input" placeholder="Max Lines per document" type="number" onChange={(event) => {
+            <input value={this.state.max_lines} className="text-input" placeholder="Max Lines per document" type="number" onChange={(event) => {
               this.setState({
-                max_lines: event.target.value
+                max_lines: event.target.value,
+                error: false
               });
             }} />
           </div>
@@ -174,7 +155,8 @@ export class App extends Component {
           <div className="form-checkbox " >
             <input defaultChecked={true} onChange={(event) => {
               this.setState({
-                copy_headers: event.target.checked
+                copy_headers: event.target.checked,
+                error: false
               })
             }} className="finger" id="include-headers" type="checkbox" />
             <label className="finger" htmlFor="include-headers" >Include Headers</label>
@@ -183,7 +165,8 @@ export class App extends Component {
           <div className="form-checkbox " >
             <input defaultChecked={true} onChange={(event) => {
               this.setState({
-                count_headers: event.target.checked
+                count_headers: event.target.checked,
+                error: false
               })
             }} className="finger" id="count-header" type="checkbox" />
             <label className="finger" htmlFor="count-header" >Count Headers Row</label>
@@ -192,6 +175,7 @@ export class App extends Component {
           <div className="form-file" >
             <label>Excel File</label>
             <input
+              id="file"
               type="file"
               onChange={this.onFilesAdded}
               ref={this.fileInputRef}

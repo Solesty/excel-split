@@ -22,6 +22,7 @@ from django.http import HttpResponse, Http404
 
 # import xlsxwriter module
 import xlsxwriter
+import csv
 
 
 def index(request):
@@ -84,7 +85,10 @@ class DocumentCreate(generics.ListCreateAPIView):
                     document, request.POST
                 )
                 titleFolder = self._createTitledFile()
-                self._writeFiles(document, readyForInsert)
+                # TODO What output does the user want?
+                # CSV or XLSX
+                self._writeFilesCSV(document, readyForInsert)
+                # self._writeFilesXLXS(document, readyForInsert)
                 self.zipFiles()
             except ValueError as error:
                 return formatResponse(
@@ -113,7 +117,24 @@ class DocumentCreate(generics.ListCreateAPIView):
                     # Add file to zip
                     zipObj.write(filePath, basename(filePath))
 
-    def _writeFiles(self, document, data):
+    def _writeFilesCSV(self, document, data):
+        index = 0
+        for chunkedData in data:
+            index += 1
+            dataChunk = chunkedData[0]
+            fileName = document.title + " #" + str(index) + ".csv"  # + self.extension
+            filePath = self.outputDir + "/" + document.title + "/" + fileName
+            with open(filePath, mode="w") as csvFile:
+                csvFileWriter = csv.writer(
+                    csvFile, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
+                )
+
+                if self.document.copy_headers:
+                    csvFileWriter.writerow(self.headerTitles)
+                
+                csvFileWriter.writerows(chunkedData)
+
+    def _writeFilesXLXS(self, document, data):
         index = 0
 
         titleEnd = 0
@@ -210,7 +231,7 @@ class DocumentCreate(generics.ListCreateAPIView):
                 settings.BASE_DIR + document.docfile.url, sheet_name=sheet_name,
             )
         else:
-            raise ValueError("Uknown file type")
+            raise ValueError("Uknown file type. Please upload XLSX or CSV file types")
         tuples = self._dataToTuple(df)
         totalRows = df.index.stop
         # print(totalRows >= 100 and document.max_lines / 1000 >= 1)

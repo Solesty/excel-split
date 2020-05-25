@@ -79,8 +79,18 @@ body {
   padding: 20px;
   margin: 0 auto;
   width: 100%;
-  margin-bottom: 20PX;
+  margin-bottom: 20px;
   text-align: center;
   height: 20px;
   overflow: auto;
+}
+
+.error {
+  margin-top: 10px;
+  background-color: rgb(177, 19, 19) (187, 16, 16) !important;
+  color: white;
+}
+
+.link{
+  color: rgb(217, 253, 197);
 }
